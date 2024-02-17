@@ -1,7 +1,7 @@
 package main
 
 import (
-	"authetication/api/routes"
+	"authentication/api/routes"
 	"os"
 
 	"github.com/gin-gonic/gin"
