@@ -14,7 +14,7 @@ import (
 // CreateUserAccount handles the creation of a new user account.
 func CreateUserAccount(c *gin.Context) {
 	// Define a struct to hold user information.
-	var user models.CreateUser
+	var user models.User
 
 	// Create a response object to handle errors.
 	resp := err.ErrorResponse{
