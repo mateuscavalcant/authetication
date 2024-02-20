@@ -13,7 +13,6 @@ func main() {
 	database.InitializeDB()
 	r := gin.Default()
 
-	// Configuração do CORS
 	r.Use(corsMiddleware())
 
 	// Inicialize suas rotas
@@ -27,7 +26,7 @@ func main() {
 	r.Run(":" + port)
 }
 
-// Defina sua função de middleware CORS
+
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
