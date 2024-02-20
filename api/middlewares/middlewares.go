@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"authentication/api/utils"
+	"log"
 	"net/http"
 	"time"
 
@@ -35,8 +36,9 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		// Check if the user ID is not present in the session.
 		if userID == nil {
-			// If not authorized, render an HTML login page with an error message.
-			c.HTML(http.StatusUnauthorized, "login.html", gin.H{"error": "Unauthorized"})
+			// If not authorized.
+			log.Println("Unauthorized")
+			c.JSON(http.StatusUnauthorized, gin.H{"message" : "Unauthorized"})
 			c.Abort() // Abort further processing of the request.
 			return
 		}

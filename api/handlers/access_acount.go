@@ -21,8 +21,6 @@ var (
     loginAttempts = cache.New(5*time.Minute, 10*time.Minute)
 )
 
-
-
 // AccessUserAccount handles user authentication.
 func AccessUserAccount(c *gin.Context) {
 	// Define a struct to hold user information.
@@ -39,8 +37,6 @@ func AccessUserAccount(c *gin.Context) {
 
 	// Get the database connection from the pool.
 	db := database.GetDB()
-
-	defer db.Close()
 
 	// Query the database to retrieve user information.
 	row := db.QueryRow("SELECT id, email, password FROM user WHERE email=?", email)
@@ -86,4 +82,5 @@ func AccessUserAccount(c *gin.Context) {
 	session.Values["email"] = user.Email
 	session.Save(c.Request, c.Writer)
 	c.JSON(http.StatusOK, gin.H{"message": "User logged in successfully"})
+
 }
