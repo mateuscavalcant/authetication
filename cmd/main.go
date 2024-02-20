@@ -15,7 +15,6 @@ func main() {
 
 	r.Use(corsMiddleware())
 
-	// Inicialize suas rotas
 	routes.InitRoutes(r.Group("/"))
 
 	port := os.Getenv("PORT")
