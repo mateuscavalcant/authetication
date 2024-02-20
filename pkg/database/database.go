@@ -1,33 +1,43 @@
-package databse
+package database
 
 import (
 	"database/sql"
-	"os"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// DB returns a connection to the MySQL database.
-func DB() *sql.DB {
+var db *sql.DB
+
+// InitializeDB initializes the database connection pool.
+func InitializeDB() {
 	// Retrieve database credentials from environment variables.
-	user := os.Getenv("USER")
-	password := os.Getenv("PASSWORD")
-	_db := os.Getenv("DB")
+	user := "root"
+	password := "20092001"
+	_db := "teste"
+	dbSource := user + ":" + password + "@tcp(localhost:3306)/" + _db
 
 	// Open a connection to the MySQL database.
-	db, err := sql.Open("mysql", user+":"+password+"@tcp(localhost:3306)/"+_db)
+	conn, err := sql.Open("mysql", dbSource)
 	if err != nil {
-		// Panic if there's an error opening the connection.
-		panic(err)
+		log.Fatal("Error connecting to the database:", err)
 	}
+
+	// Set the maximum number of open connections.
+	conn.SetMaxOpenConns(100) // Adjust the value according to your requirements.
 
 	// Ping the database to ensure the connection is successful.
-	err = db.Ping()
+	err = conn.Ping()
 	if err != nil {
-		// Panic if there's an error pinging the database.
-		panic(err)
+		log.Fatal("Error pinging the database:", err)
 	}
 
-	// Return the database connection.
+	// Set the package-level `db` variable to the connection.
+	db = conn
+}
+
+// GetDB returns the connection to the MySQL database.
+func GetDB() *sql.DB {
+	// Return the existing database connection.
 	return db
 }

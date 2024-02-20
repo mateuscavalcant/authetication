@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"authentication/api/utils"
-	CON "authentication/pkg/database"
+	"authentication/pkg/database"
 	"authentication/pkg/models"
 	"authentication/pkg/models/err"
 	"log"
@@ -37,8 +37,10 @@ func AccessUserAccount(c *gin.Context) {
 		Error: make(map[string]string),
 	}
 
-	// Get the database connection.
-	db := CON.DB()
+	// Get the database connection from the pool.
+	db := database.GetDB()
+
+	defer db.Close()
 
 	// Query the database to retrieve user information.
 	row := db.QueryRow("SELECT id, email, password FROM user WHERE email=?", email)

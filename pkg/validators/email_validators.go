@@ -1,11 +1,12 @@
 package validators
 
 import (
-	CON "authentication/pkg/database"
+	"authentication/pkg/database"
+	"errors"
+	_"database/sql"
 
 	"github.com/badoux/checkmail"
 )
-
 
 // ValidateFormatEmail checks the format of the provided email address.
 func ValidateFormatEmail(email string) error {
@@ -18,12 +19,17 @@ func ValidateFormatEmail(email string) error {
 // ExistEmail checks if the provided email already exists in the database.
 func ExistEmail(email string) (bool, error) {
 	// Get the database connection.
-	db := CON.DB()
+	db := database.GetDB()
+
+	// Verifique se db é nil antes de prosseguir.
+	if db == nil {
+		return false, errors.New("database connection is nil")
+	}
 
 	var emailCount int
 
 	// Query the database to count the number of occurrences of the provided email.
-	err := db.QueryRow("SELECT COUNT(id) AS emailCount FROM user1 WHERE email=?", email).Scan(&emailCount)
+	err := db.QueryRow("SELECT COUNT(id) AS emailCount FROM user WHERE email=?", email).Scan(&emailCount)
 	if err != nil {
 		// Return false and any errors encountered during the query.
 		return false, err

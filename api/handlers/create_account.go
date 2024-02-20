@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	CON "authentication/pkg/database"
+	"authentication/pkg/database"
 	"authentication/pkg/models"
 	"authentication/pkg/models/err"
 	"authentication/pkg/validators"
+	_"database/sql"
 	"log"
 	"strings"
 
@@ -76,11 +77,11 @@ func CreateUserAccount(c *gin.Context) {
 	user.Email = email
 	user.Password = password
 
-	// Get the database connection.
-	db := CON.DB()
+	// Get the database connection from the pool.
+	db := database.GetDB()
 
 	// Prepare SQL statement for user creation.
-	query := "INSERT INTO user1 (name, email, password) VALUES (?, ?, ?)"
+	query := "INSERT INTO user (name, email, password) VALUES (?, ?, ?)"
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		log.Fatal(err)
@@ -96,4 +97,7 @@ func CreateUserAccount(c *gin.Context) {
 
 	// Return success message if the user is created successfully.
 	c.JSON(200, gin.H{"message": "User created successfully"})
+
+	// Close the prepared statement to release resources.
+	defer stmt.Close()
 }

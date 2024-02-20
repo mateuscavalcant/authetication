@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"authentication/api/utils"
-	CON "authentication/pkg/database"
+	"authentication/pkg/database"
 	"authentication/pkg/models/err"
 	"io/ioutil"
 	"log"
@@ -62,8 +62,8 @@ func UpdateUserAccount(c *gin.Context) {
 	}
 
 	// Get the database connection.
-	db := CON.DB()
-
+	db := database.GetDB()
+	defer db.Close() // Close the database connection at the end of the function.
 
 	stmt, errDB := db.Prepare("UPDATE user SET name=?, bio=? WHERE id=?")
 	if errDB != nil {

@@ -10,6 +10,7 @@ import (
 func InitRoutes(r *gin.RouterGroup) {
 	r.POST("/signup", handlers.CreateUserAccount)
 	r.POST("/login", middlewares.LimitLoginAttempts(),handlers.AccessUserAccount)
+	r.Use(middlewares.AuthMiddleware())
 	r.PUT("/update-profile", handlers.UpdateUserAccount)
 	r.DELETE("/delete-account", handlers.DeleteUserAccount)
 }

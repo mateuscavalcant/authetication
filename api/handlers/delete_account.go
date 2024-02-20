@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"authentication/api/utils"
-	CON "authentication/pkg/database"
+	"authentication/pkg/database"
 	"authentication/pkg/models"
 	"authentication/pkg/models/err"
 	"log"
@@ -31,8 +31,8 @@ func DeleteUserAccount(c *gin.Context) {
 		Error: make(map[string]string),
 	}
 
-	// Get the database connection.
-	db := CON.DB()
+	// Get the database connection from the pool.
+	db := database.GetDB()
 
 	// Query the database to retrieve user information.
 	row := db.QueryRow("SELECT id, email, password FROM user WHERE email=?", email)
@@ -68,5 +68,8 @@ func DeleteUserAccount(c *gin.Context) {
 	_, errDB = stmt.Exec(id)
 
 	c.JSON(200, gin.H{"message": "User deleted in successfully"})
+
+	// Close the prepared statement to release resources.
+	defer stmt.Close()
 
 }
