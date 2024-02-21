@@ -64,6 +64,46 @@ async fn login(user: web::Form<User>) -> impl Responder {
     }
 }
 
+// Rota para lidar com a remoção de usuários
+async fn delete(user: web::Form<User>) -> impl Responder {
+    // Conectando ao banco de dados MySQL
+    let pool = conectar_mysql();
+    let mut conn: PooledConn = pool.get_conn().unwrap();
+    // Verificando a existência do usuário no banco de dados
+    let result = conn.query_row(
+        r"SELECT id, email, password FROM user WHERE email=?",
+        params![&user.email],
+        |row| {
+            Ok(User {
+                id: row.get(0)?,
+                email: row.get(1)?,
+                password: row.get(2)?,
+            })
+        },
+    );
+
+    match result {
+        Ok(user) => {
+            format!("Usuário encontrado {:?}", user);
+            // Realiza a remoção do usuário
+            let result_delete = conn.execute(
+                r"DELETE FROM user WHERE email=?",
+                params![&user.email],
+            );
+            match result_delete {
+                Ok(_) => {
+                    format!("Usuário removido com sucesso")
+                }
+                Err(err) => {
+                    format!("Erro ao remover o usuário: {:?}", err)
+                }
+            }
+        }
+        Err(err) => {
+            format!("Erro ao encontrar o usuário: {:?}", err)
+        }
+    }
+}
 
 
 #[actix_web::main]
@@ -72,6 +112,9 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .route("/signup", web::post().to(signup))
+            .route("/login", web::post().to(login))
+            .route("/delete-account", web::post().to(delete))
+
     })
     .bind("127.0.0.1:8765")?
     .run()
