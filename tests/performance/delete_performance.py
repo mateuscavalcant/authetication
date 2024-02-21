@@ -4,7 +4,7 @@ import requests
 class DeletePerformanceTest(unittest.TestCase):
     def test_delete_success(self):
         url = 'http://localhost:8000/delete-account'
-        for i in range(1, 101):
+        for i in range(0, 1000):
             # Gerar um endereço de email único
             email = f"test{i}@example.com"
 
@@ -18,7 +18,7 @@ class DeletePerformanceTest(unittest.TestCase):
 
     def test_delete_invalid(self):
         url = 'http://localhost:8000/delete-account'
-        for i in range(1, 101):
+        for i in range(0, 1000):
             # Gerar um endereço de email único
             email = f"test{i}@example.com"
 

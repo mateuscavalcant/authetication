@@ -4,7 +4,7 @@ import requests
 class SignupPerformanceTest(unittest.TestCase):
     def test_signup_success(self):
         url = 'http://localhost:8000/signup'
-        for i in range(1, 101):
+        for i in range(0, 1000):
             # Gerar um endereço de email único
             email = f"test{i}@example.com"
 
@@ -19,7 +19,7 @@ class SignupPerformanceTest(unittest.TestCase):
 
     def test_signup_invalid(self):
         url = 'http://localhost:8000/signup'
-        for i in range(1, 101):
+        for i in range(0, 1000):
             # Gerar um endereço de email único
             email = f"test{i}@example.com"
 
